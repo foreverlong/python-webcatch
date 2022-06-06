@@ -1,3 +1,4 @@
+#encoding: utf-8
 from multiprocessing.connection import wait
 import requests
 import csv
@@ -29,9 +30,9 @@ print(real_time)
 
 #龙泽园街道160龙泽园街道智慧社(time_pose)4分钟10人1个龙泽园街道智慧社西一门南侧09:00-11:5013:00-18:50
 #weizhi=dd.find('龙泽园街道智慧社') #找到位置
-weizhi=dd.find('北七家镇八仙庄（潮鹏）') 
+weizhi=dd.find('龙泽园街道智慧社') 
 #print(weizhi)
-time_pos = weizhi + 11
+time_pos = weizhi + 8
 if dd[time_pos:(time_pos+1)]=='无':
     time = 0
     people = 0
