@@ -3,6 +3,13 @@ import requests
 import csv
 from csv import writer
 from bs4 import BeautifulSoup
+
+import os
+import sys
+from pprint import pprint
+from notion_client import Client
+
+
 req = requests.get(url="https://testnumber.bjchp.gov.cn/")
 req.encoding = "utf-8"
 html=req.text
@@ -21,10 +28,10 @@ print(real_date)
 print(real_time)
 
 #龙泽园街道160龙泽园街道智慧社(time_pose)4分钟10人1个龙泽园街道智慧社西一门南侧09:00-11:5013:00-18:50
-weizhi=dd.find('龙泽园街道智慧社') #找到位置
-#weizhi=dd.find('马池口镇北小营村') 
+#weizhi=dd.find('龙泽园街道智慧社') #找到位置
+weizhi=dd.find('北七家镇八仙庄（潮鹏）') 
 #print(weizhi)
-time_pos = weizhi + 8
+time_pos = weizhi + 11
 if dd[time_pos:(time_pos+1)]=='无':
     time = 0
     people = 0
@@ -47,6 +54,43 @@ with open('龙泽园街道智慧社.csv', 'a', newline='') as f_object:
     writer_object.writerow([real_date, real_time, time, people])  
     # Close the file object
     f_object.close()
+
+
+# Initialize the client
+notion = Client(auth='secret_XsLZcIj2ZJqXyK0b35zhWyMzZn7OUgZOzWiULUBgSlu')
+
+# Create a new page
+new_page = {
+    "日期": {"title": [{"text": {"content": str(real_date)}}]},
+    "时间": {
+        "type": "rich_text",
+        "rich_text": [
+            {
+                "type": "text",
+                "text": {"content": str(real_time)},
+            },
+        ],
+    },
+    "等候时间": {
+        "type": "rich_text",
+        "rich_text": [
+            {
+                "type": "text",
+                "text": {"content": str(time)},
+            },
+        ],
+    },
+    "等候人数": {
+        "type": "rich_text",
+        "rich_text": [
+            {
+                "type": "text",
+                "text": {"content": str(people)},
+            },
+        ],
+    }
+}
+notion.pages.create(parent={"database_id": 'dc4633a949f546d1ab1e24d305343cbf'}, properties=new_page)
 
 
 #with open("file.csv", "w", encoding="gbk", newline="") as f:
